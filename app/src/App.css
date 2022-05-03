@@ -37,18 +37,9 @@ table, th, td {
 
 table {
   table-layout:fixed;
-  width: 1000;
+  width: 750px;
 }
 
-th {
-  width: 200;
+th, td {
+  width: 150px;
 }
-
-/* @keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-} */

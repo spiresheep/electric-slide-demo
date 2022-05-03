@@ -37,7 +37,7 @@ const headers = ['Color', 'Type', 'Name', 'Price', 'Available']
 const data = [
   ['Red', 'Instant', 'Fling', '2.00', 'No'],
   ['Green', 'Creature', 'Jungle Lion', '0.10', 'No'],
-  ['Green', 'Giant Growth', '0.5', 'Yes'],
+  ['Green', 'Instant', 'Giant Growth', '0.5', 'Yes'],
   ['White', 'Instant', 'Steppe Lynx', '03.00', 'Yes']
 ]
 
