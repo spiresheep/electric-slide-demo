@@ -9,14 +9,12 @@ interface Properties {
   onMouseUp: () => void;
 }
 
-/** The controller for the IntroPage. */
 export class SlidingTable extends React.Component<Properties> {
   constructor(props: Properties) {
     super(props);
   }
 
   public render(): JSX.Element {
-    //<th id='r0-c2' onMouseDown={() => this.props.onMouseDown('c2')}>Type</th>
     return (
       <table>
         <thead>
