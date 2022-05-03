@@ -23,8 +23,7 @@ export class SlidingTable extends React.Component<Properties> {
       <div className='rails'>
         <SlidingColumn  show={this.props.slidingColumn !== null}
           leftValue={this.props.slidingColumnXPosition}/>
-        <table>
-          
+        <table className='base-table'>
           <thead>
             <tr>
               {this.props.headerOrder.map(this.renderHeader)}
@@ -60,7 +59,7 @@ export class SlidingTable extends React.Component<Properties> {
     const isSlidingColumn = this.props.slidingColumn === col;
     return (
       <th id={`${0}-${col}`} key={`${0}-${col}`}
-          className={isSlidingColumn ? 'header-selected ' : ''}
+          className={isSlidingColumn ? 'header-selected ' : 'base-th'}
           onMouseDown={(event) => this.onMouseDown(event, col)}>
         {this.props.slidingColumn === col? '' :this.props.header[col]}
       </th>);
@@ -79,7 +78,7 @@ export class SlidingTable extends React.Component<Properties> {
             } else if (isSlidingColumn) {
               return 'td-selected'
             } else {
-              return ''
+              return 'base-td';
             }
           })();
           return (
