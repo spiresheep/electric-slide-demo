@@ -99,7 +99,6 @@ class App extends React.Component<{}, State> {
     if(dest >= this.state.headerOrder.length || dest < 0) {
       return;
     }
-    //console.log('swap', source, dest)
     const sourceValue = this.state.headerOrder[source];
     const destValue = this.state.headerOrder[dest];
     this.state.headerOrder[source] = destValue;
