@@ -5,8 +5,7 @@ interface Properties {
   headerOrder: number[];
   header: string[];
   data: string[][];
-  slidingColumn: number | null;
-  //Can be negative, indicating it has slid off the table, or positive.
+  slidingColumn: number;
   slidingColumnXPosition: number;
   onMouseDown: (x: number, index: number) => void;
   onMouseUp: () => void;
@@ -14,14 +13,14 @@ interface Properties {
 }
 
 export class SlidingTable extends React.Component<Properties> {
-  constructor(props: Properties) {
-    super(props);
-  }
-
   public render(): JSX.Element {
     return (
       <div className='rails'>
-        <SlidingColumn  show={this.props.slidingColumn !== null}
+        <SlidingColumn
+          show={this.props.slidingColumn > -1}
+          header={this.props.header}
+          data={this.props.data}
+          slidingColumn={this.props.slidingColumn}
           leftValue={this.props.slidingColumnXPosition}/>
         <table className='base-table'>
           <thead>
@@ -69,7 +68,6 @@ export class SlidingTable extends React.Component<Properties> {
     return (
       <tr id={`${row}`} key={`${row}`}>
         {this.props.headerOrder.map(col => {
-          const id= `${row}-${col}`
           const isSlidingColumn = this.props.slidingColumn === col;
           const isBottomRow = row === 3;
           const className = (() => {
@@ -89,52 +87,39 @@ export class SlidingTable extends React.Component<Properties> {
         })}
       </tr>);
   }
-
-  private getStyle =(row: number, column: number) => {
-    if('hidden') {
-      return
-    } else if('highlighetd'){
-      return
-    } else {
-      return
-    }
-  }
-
-
 }
 
 interface SlidingColProperties {
+  header: string[];
+  data: string[][];
+  slidingColumn: number;
   leftValue: number;
   show: boolean;
 }
 
 class SlidingColumn extends React.Component<SlidingColProperties> {
-  constructor(props: SlidingColProperties) {
-    super(props);
-  }
-
   public render(): JSX.Element {
     if(!this.props.show) {
       return <div style={{display: 'none'}}/>
     }
     return (
-      <div className='sliding-column-container' style={{left: this.props.leftValue}}>
+      <div className='sliding-column-container'
+          style={{left: this.props.leftValue}}>
         <table className='sliding-column-table '>
           <thead>
             <tr>
               <th>
-              {'header'}
+                {this.props.header[this.props.slidingColumn]}
               </th>
             </tr>
           </thead>
           <tbody>
-            <tr><td>Some data</td></tr>
-            <tr><td> Some data</td></tr>
-            <tr><td> Some data</td></tr>
-            <tr><td> Some data</td></tr>
+            <tr><td>{this.props.data[0][this.props.slidingColumn]}</td></tr>
+            <tr><td>{this.props.data[1][this.props.slidingColumn]}</td></tr>
+            <tr><td>{this.props.data[2][this.props.slidingColumn]}</td></tr>
+            <tr><td>{this.props.data[3][this.props.slidingColumn]}</td></tr>
           </tbody>
         </table>
       </div>);
   }
 }
-

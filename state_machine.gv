@@ -1,0 +1,9 @@
+States:
+s0: Staring state.
+s1: Evalcuate Mouse down
+s2: Initalize data needed to display stuff
+
+C0 - Mouse is inside active region.
+E0 - Mouse move.
+E1 - Mouse down.
+E2 - Mouse up.
