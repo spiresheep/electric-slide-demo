@@ -53,30 +53,49 @@ class App extends React.Component<{}, State> {
 
   private onMouseMove = (newCurrent: number) => {
     if(this.state.slidingColumn > -1) {
+      this.shouldColumnsSwap(newCurrent - this.state.mouseCurrent, this.state.mouseCurrent - this.state.mouseStart);
       this.setState({
         mouseCurrent: newCurrent
       });
-      this.shouldColumnsSwitch();
     }
   }
 
-  private shouldColumnsSwitch = () => {
-    const difference = (this.state.mouseCurrent - this.state.mouseStart);
-    if(difference > 0) {
+  private shouldColumnsSwap = (shift: number, difference: number) => {
+    if(shift > 0) {
       const stepsFromStart = Math.floor(difference / 75);
-      if(stepsFromStart% 2 === 1) {
-        const mouseInside = this.state.originalCol + Math.ceil(stepsFromStart / 2);
-        if(mouseInside != this.state.headerOrder.indexOf(this.state.slidingColumn)) {
-          this.onChangeColumnPosition(this.state.headerOrder.indexOf(this.state.slidingColumn), mouseInside);
+      if(stepsFromStart% 2 === 1 || stepsFromStart%2 === -1) {
+        const destinationCol = this.state.originalCol + Math.ceil(stepsFromStart / 2);
+        const sourceCol = this.state.headerOrder.indexOf(this.state.slidingColumn);
+        console.log(destinationCol, sourceCol);
+        if(destinationCol != sourceCol) {
+          this.swapColumns(
+            sourceCol,
+            destinationCol
+          );
+        }
+      }
+    } else if(shift < 0) {
+      const stepsFromStart = Math.floor(difference / 75);
+      console.log(stepsFromStart)
+      if(stepsFromStart% 2 === 0) {
+        const destinationCol = this.state.originalCol + Math.ceil(stepsFromStart / 2);
+        const sourceCol = this.state.headerOrder.indexOf(this.state.slidingColumn);
+        console.log(destinationCol, sourceCol);
+        if(destinationCol != sourceCol) {
+          this.swapColumns(
+            sourceCol,
+            destinationCol
+          );
         }
       }
     }
   }
 
-  private onChangeColumnPosition = (source: number, dest: number) => {
-    if(source === dest || dest >= this.state.headerOrder.length || dest < 0) {
+  private swapColumns = (source: number, dest: number) => {
+    if(dest >= this.state.headerOrder.length || dest < 0) {
       return;
     }
+    //console.log('swap', source, dest)
     const sourceValue = this.state.headerOrder[source];
     const destValue = this.state.headerOrder[dest];
     this.state.headerOrder[source] = destValue;
