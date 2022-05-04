@@ -1,3 +1,8 @@
+* {
+  box-sizing: border-box;
+}
+
+
 .App {
   text-align: center;
 }
@@ -17,6 +22,7 @@
   color: black;
   flex-grow: 0;
   flex-shrink: 0;
+  font-size: 12px;
 }
 
 .base-table {
@@ -28,46 +34,57 @@
 }
 
 .base-th {
+  box-sizing: border-box;
   color: gray;
   width: 150px;
   border: 3px solid black;
 }
 
 .base-td {
+  box-sizing: border-box;
   border: 3px solid black;
+  width: 150px;
 }
 
 .header-selected {
+  box-sizing: border-box;
   border-left: 3px solid blue !important;
   border-right: 3px solid blue !important;
   border-top: 3px solid blue !important;
   border-bottom: none;
+  width: 150px;
 }
 
 .td-selected {
+  box-sizing: border-box;
   border-left: 3px solid blue !important;
   border-right: 3px solid blue !important;
   border-top: none;
   border-bottom: none;
+  width: 150px;
 }
 
 .bottom-selected {
+  box-sizing: border-box;
   border-left: 3px solid blue !important;
   border-right: 3px solid blue !important;
   border-top: none;
   border-bottom: 3px solid blue !important;
+  width: 150px;
 }
 
 .rails {
+  box-sizing: border-box;
   margin-top: 200px;
   margin-left: 100px;
   position: relative;
 }
 
 .sliding-column-container {
+  box-sizing: border-box;
   z-index: 100;
   table-layout:fixed;
-  width: 150px;
+  width: 156px;
   position:absolute;; 
   top:0px;
   color: black;
@@ -75,6 +92,7 @@
 }
 
 .sliding-column-table {
+  box-sizing: border-box;
   table-layout:fixed;
   width: 150px;
   border: none;

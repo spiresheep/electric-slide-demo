@@ -8,6 +8,7 @@ interface State {
   headerOrder: number[];
   mouseStart: number;
   mouseCurrent: number;
+  slidingColumnStart: number;
 }
 
 class App extends React.Component<{}, State> {
@@ -18,6 +19,7 @@ class App extends React.Component<{}, State> {
       headerOrder: [4, 0, 1, 2, 3],
       mouseStart: 0,
       mouseCurrent: 0,
+      slidingColumnStart: 0
     };
   }
 
@@ -28,7 +30,7 @@ class App extends React.Component<{}, State> {
           headerOrder={this.state.headerOrder}
           header={headers}
           data={data}
-          slidingColumnXPosition={this.state.mouseCurrent - this.state.mouseStart}
+          slidingColumnXPosition={this.state.slidingColumnStart + this.state.mouseCurrent - this.state.mouseStart}
           slidingColumn={this.state.slidingColumn}
           onMouseDown={this.onMouseDown}
           onMouseUp={() => {this.setState({slidingColumn: null})}}
@@ -38,11 +40,13 @@ class App extends React.Component<{}, State> {
   }
 
   private onMouseDown = (x: number, col: number) => {
-    console.log(x, col);
+    console.log(x, col, this.state.headerOrder.indexOf(col))
+    const slidingColumnOffset = this.state.headerOrder.indexOf(col)
     this.setState({
       mouseCurrent: x,
       mouseStart: x,
-      slidingColumn: col
+      slidingColumn: col,
+      slidingColumnStart: slidingColumnOffset * column_width
     });
   }
 
@@ -52,6 +56,11 @@ class App extends React.Component<{}, State> {
       mouseCurrent: newCurrent
     });
   }
+
+  private onThresholdCrossed = () => {
+    
+  }
+
 }
 
 const headers = ['Color', 'Type', 'Name', 'Price', 'Available']

@@ -11,6 +11,7 @@ interface Properties {
   onMouseDown: (x: number, index: number) => void;
   onMouseUp: () => void;
   onMouseMove: (newX: number) => void;
+  onThresholdCross?: (newSlidingColIndex: number) => void;
 }
 
 export class SlidingTable extends React.Component<Properties> {
@@ -90,18 +91,16 @@ export class SlidingTable extends React.Component<Properties> {
       </tr>);
   }
 
-  private getStyle =(row: number, column: number) => {
-    if('hidden') {
-      return
-    } else if('highlighetd'){
-      return
-    } else {
-      return
-    }
+  private renderHiddenOverlay = () => {
+    return  (
+      <div>
+        this.props.headerOrder.map(value
+      </div>s
+    );
   }
 
-
 }
+
 
 interface SlidingColProperties {
   leftValue: number;
