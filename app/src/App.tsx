@@ -8,7 +8,7 @@ interface State {
   headerOrder: number[];
   mouseStart: number;
   mouseCurrent: number;
-  slidingColumnStart: number;
+  slidingColumnXOffset: number;
 }
 
 class App extends React.Component<{}, State> {
@@ -20,18 +20,20 @@ class App extends React.Component<{}, State> {
       headerOrder: [4, 0, 1, 2, 3],
       mouseStart: 0,
       mouseCurrent: 0,
-      slidingColumnStart: -1
+      slidingColumnXOffset: -1
     };
   }
 
   public render(): JSX.Element {
+    const slidingColumnXPosition = this.state.slidingColumnXOffset +
+      this.state.mouseCurrent - this.state.mouseStart;
     return (
       <div className="App">
         <SlidingTable
           headerOrder={this.state.headerOrder}
           header={headers}
           data={data}
-          slidingColumnXPosition={this.state.slidingColumnStart + this.state.mouseCurrent - this.state.mouseStart}
+          slidingColumnXPosition={slidingColumnXPosition}
           slidingColumn={this.state.slidingColumn}
           onMouseDown={this.onMouseDown}
           onMouseUp={() => {this.setState({slidingColumn: -1})}}
@@ -47,13 +49,15 @@ class App extends React.Component<{}, State> {
       mouseStart: x,
       slidingColumn: col,
       originalCol: slidingColumnPos,
-      slidingColumnStart: slidingColumnPos * column_width
+      slidingColumnXOffset: slidingColumnPos * column_width
     });
   }
 
   private onMouseMove = (newCurrent: number) => {
     if(this.state.slidingColumn > -1) {
-      this.shouldColumnsSwap(newCurrent - this.state.mouseCurrent, this.state.mouseCurrent - this.state.mouseStart);
+      const mouseMoveDelta = newCurrent - this.state.mouseCurrent;
+      const mouseOffset = this.state.mouseCurrent - this.state.mouseStart
+      this.shouldColumnsSwap(mouseMoveDelta, mouseOffset);
       this.setState({
         mouseCurrent: newCurrent
       });
