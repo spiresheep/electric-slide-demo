@@ -7,9 +7,10 @@ interface Properties {
   data: string[][];
   slidingColumn: number;
   slidingColumnXPosition: number;
-  onMouseDown: (x: number, index: number) => void;
+  slidingColumnYPosition: number;
+  onMouseDown: (x: number, y: number, index: number) => void;
   onMouseUp: () => void;
-  onMouseMove: (newX: number) => void;
+  onMouseMove: (newX: number, newY: number) => void;
 }
 
 export class SlidingTable extends React.Component<Properties> {
@@ -21,7 +22,8 @@ export class SlidingTable extends React.Component<Properties> {
           header={this.props.header}
           data={this.props.data}
           slidingColumn={this.props.slidingColumn}
-          leftValue={this.props.slidingColumnXPosition}/>
+          leftValue={this.props.slidingColumnXPosition}
+          topValue={this.props.slidingColumnYPosition}/>
         <table className='base-table'>
           <thead>
             <tr>
@@ -44,14 +46,6 @@ export class SlidingTable extends React.Component<Properties> {
   public componentWillUnmount(): void {
     window.removeEventListener('mouseup', this.props.onMouseUp)
     window.removeEventListener('mousemove', this.onMouseMove)
-  }
-
-  private onMouseDown(event: React.MouseEvent, col: number) {
-    this.props.onMouseDown(event.clientX, col);
-  }
-
-  private onMouseMove = (event: MouseEvent) => {
-    this.props.onMouseMove(event.clientX)
   }
 
   private renderHeader = (col: number) => {
@@ -87,6 +81,14 @@ export class SlidingTable extends React.Component<Properties> {
         })}
       </tr>);
   }
+
+  private onMouseDown(event: React.MouseEvent, col: number) {
+    this.props.onMouseDown(event.clientX, event.clientY, col);
+  }
+
+  private onMouseMove = (event: MouseEvent) => {
+    this.props.onMouseMove(event.clientX, event.clientY)
+  }
 }
 
 interface SlidingColProperties {
@@ -94,6 +96,7 @@ interface SlidingColProperties {
   data: string[][];
   slidingColumn: number;
   leftValue: number;
+  topValue: number;
   show: boolean;
 }
 
@@ -104,20 +107,28 @@ class SlidingColumn extends React.Component<SlidingColProperties> {
     }
     return (
       <div className='sliding-column-container'
-          style={{left: this.props.leftValue}}>
-        <table className='sliding-column-table '>
+          style={{left: this.props.leftValue, top: this.props.topValue}}>
+        <table className='sliding-column-table'>
           <thead>
             <tr>
-              <th>
+              <th className='sliding-column-th'>
                 {this.props.header[this.props.slidingColumn]}
               </th>
             </tr>
           </thead>
           <tbody>
-            <tr><td>{this.props.data[0][this.props.slidingColumn]}</td></tr>
-            <tr><td>{this.props.data[1][this.props.slidingColumn]}</td></tr>
-            <tr><td>{this.props.data[2][this.props.slidingColumn]}</td></tr>
-            <tr><td>{this.props.data[3][this.props.slidingColumn]}</td></tr>
+            <tr><td className='sliding-column-td'>
+              {this.props.data[0][this.props.slidingColumn]}
+            </td></tr>
+            <tr><td className='sliding-column-td'>
+              {this.props.data[1][this.props.slidingColumn]}
+            </td></tr>
+            <tr><td className='sliding-column-td'>
+              {this.props.data[2][this.props.slidingColumn]}
+            </td></tr>
+            <tr><td className='sliding-column-td'>
+              {this.props.data[3][this.props.slidingColumn]}
+            </td></tr>
           </tbody>
         </table>
       </div>);

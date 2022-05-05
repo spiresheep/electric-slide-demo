@@ -1,13 +1,16 @@
 import React from 'react';
 import {SlidingTable} from './sliding_table'
 import './App.css';
+import { NumberLiteralType } from 'typescript';
 
 interface State {
   slidingColumn: number;
   originalCol: number;
   headerOrder: number[];
-  mouseStart: number;
-  mouseCurrent: number;
+  mouseXStart: number;
+  mouseXCurrent: number;
+  mouseYStart: number;
+  mouseYCurrent: number;
   slidingColumnXOffset: number;
 }
 
@@ -18,15 +21,27 @@ class App extends React.Component<{}, State> {
       slidingColumn: -1,
       originalCol: 0,
       headerOrder: [4, 0, 1, 2, 3],
-      mouseStart: 0,
-      mouseCurrent: 0,
+      mouseXStart: 0,
+      mouseXCurrent: 0,
+      mouseYStart: 0,
+      mouseYCurrent: 0,
       slidingColumnXOffset: -1
     };
   }
 
   public render(): JSX.Element {
     const slidingColumnXPosition = this.state.slidingColumnXOffset +
-      this.state.mouseCurrent - this.state.mouseStart;
+      this.state.mouseXCurrent - this.state.mouseXStart;
+    const slidingColumnPos = (() => {
+      const yDelta = this.state.mouseYCurrent - this.state.mouseYStart;
+      if(yDelta > 0) {
+        return Math.min(header_height, yDelta);
+      } else if(yDelta < 0) {
+        return Math.max(-1 * header_height, yDelta);
+      } else {
+        return 0;
+      }
+    })();
     return (
       <div className="App">
         <SlidingTable
@@ -34,6 +49,7 @@ class App extends React.Component<{}, State> {
           header={headers}
           data={data}
           slidingColumnXPosition={slidingColumnXPosition}
+          slidingColumnYPosition={slidingColumnPos}
           slidingColumn={this.state.slidingColumn}
           onMouseDown={this.onMouseDown}
           onMouseUp={() => {this.setState({slidingColumn: -1})}}
@@ -42,24 +58,27 @@ class App extends React.Component<{}, State> {
     );
   }
 
-  private onMouseDown = (x: number, col: number) => {
+  private onMouseDown = (x: number, y: number, col: number) => {
     const slidingColumnPos = this.state.headerOrder.indexOf(col)
     this.setState({
-      mouseCurrent: x,
-      mouseStart: x,
+      mouseXCurrent: x,
+      mouseXStart: x,
+      mouseYCurrent: y,
+      mouseYStart: y,
       slidingColumn: col,
       originalCol: slidingColumnPos,
       slidingColumnXOffset: slidingColumnPos * column_width
     });
   }
 
-  private onMouseMove = (newCurrent: number) => {
+  private onMouseMove = (newX: number, newY: number) => {
     if(this.state.slidingColumn > -1) {
-      const mouseMoveDelta = newCurrent - this.state.mouseCurrent;
-      const mouseOffset = this.state.mouseCurrent - this.state.mouseStart
+      const mouseMoveDelta = newX - this.state.mouseXCurrent;
+      const mouseOffset = this.state.mouseXCurrent - this.state.mouseXStart
       this.shouldColumnsSwap(mouseMoveDelta, mouseOffset);
       this.setState({
-        mouseCurrent: newCurrent
+        mouseXCurrent: newX,
+        mouseYCurrent: newY
       });
     }
   }
@@ -70,7 +89,6 @@ class App extends React.Component<{}, State> {
       if(stepsFromStart% 2 === 1 || stepsFromStart%2 === -1) {
         const destinationCol = this.state.originalCol + Math.ceil(stepsFromStart / 2);
         const sourceCol = this.state.headerOrder.indexOf(this.state.slidingColumn);
-        console.log(destinationCol, sourceCol);
         if(destinationCol != sourceCol) {
           this.swapColumns(
             sourceCol,
@@ -80,11 +98,9 @@ class App extends React.Component<{}, State> {
       }
     } else if(shift < 0) {
       const stepsFromStart = Math.floor(difference / 75);
-      console.log(stepsFromStart)
       if(stepsFromStart% 2 === 0) {
         const destinationCol = this.state.originalCol + Math.ceil(stepsFromStart / 2);
         const sourceCol = this.state.headerOrder.indexOf(this.state.slidingColumn);
-        console.log(destinationCol, sourceCol);
         if(destinationCol != sourceCol) {
           this.swapColumns(
             sourceCol,
@@ -117,5 +133,7 @@ const data = [
 ]
 
 const column_width = 150;
+
+const header_height = 24;
 
 export default App;
